@@ -26,6 +26,7 @@ const Pin = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const [pin, setPin] = useState(new Array(4).fill(""));
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (element, index) => {
     const value = element.value;
@@ -43,6 +44,7 @@ const Pin = () => {
   };
 
   const submitForm = (data) => {
+    setLoading(true);
     axios
       .post(`${BASE_URL}/pin`, data)
       .then((response) => {
@@ -51,6 +53,9 @@ const Pin = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -83,7 +88,9 @@ const Pin = () => {
               <FormErrMsg errors={errors} inputName="pin" />
 
               <div className="buttonSec">
-                <button type="submit">Next</button>
+                <button type="submit" disabled={loading}>
+                  {loading ? "Loading..." : "Next"}
+                </button>
               </div>
             </form>
           </div>
