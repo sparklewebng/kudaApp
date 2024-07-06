@@ -14,12 +14,14 @@ const schema = yup.object().shape({
   email: yup.string().required("Email is required"),
   password: yup
     .string()
-    .min(10, "Password must be at least 10 characters")
+    .min(18, "Password must be at least 10 characters")
     .max(30, "Password cannot exceed 30 characters")
     .required("Password is required"),
 });
+
 const Home = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,6 +29,7 @@ const Home = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const submitForm = (data) => {
+    setLoading(true);
     axios
       .post(`${BASE_URL}/`, data)
       .then((response) => {
@@ -35,23 +38,26 @@ const Home = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   return (
     <div className="home">
-      <div class="container">
-        <div class="contentSec">
-          <div class="logo">
+      <div className="container">
+        <div className="contentSec">
+          <div className="logo">
             <img src={logo} alt="logo" />
           </div>
-          <div class="title">Hey, there!</div>
+          <div className="title">Hey, there!</div>
         </div>
-        <div class="loginWrapper">
-          <div class="loginSec">
+        <div className="loginWrapper">
+          <div className="loginSec">
             <form onSubmit={handleSubmit(submitForm)}>
-              <label for="email">Email Address</label>
-              <div class="formInput">
+              <label htmlFor="email">Email Address</label>
+              <div className="formInput">
                 <input
                   name="email"
                   type="email"
@@ -61,8 +67,8 @@ const Home = () => {
                 />
               </div>
               <FormErrMsg errors={errors} inputName="email" />
-              <label for="password">Password</label>
-              <div class="formInput">
+              <label htmlFor="password">Password</label>
+              <div className="formInput">
                 <input
                   name="password"
                   type="password"
@@ -72,7 +78,9 @@ const Home = () => {
                 />
               </div>
               <FormErrMsg errors={errors} inputName="password" />
-              <button type="submit">Sign In</button>
+              <button type="submit" disabled={loading}>
+                {loading ? "Loading..." : "Sign In"}
+              </button>
             </form>
           </div>
         </div>
