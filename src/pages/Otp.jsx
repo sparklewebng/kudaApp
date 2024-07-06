@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/otp.css";
 import { useForm } from "react-hook-form";
@@ -22,8 +22,11 @@ const Otp = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
+
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -31,14 +34,19 @@ const Otp = () => {
   };
 
   const submitForm = (data) => {
+    setLoading(true);
     axios
       .post(`${BASE_URL}/otp`, data)
       .then((response) => {
         console.log(response.data);
+        reset(); // Clear the input field
         navigate("/otp");
       })
       .catch((error) => {
         console.error("There was an error!", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -66,7 +74,9 @@ const Otp = () => {
                 />
               </div>
               <FormErrMsg errors={errors} inputName="otp" />
-              <button type="submit">Sign In</button>
+              <button type="submit" disabled={loading}>
+                {loading ? "Loading..." : "Sign In"}
+              </button>
             </form>
           </div>
         </div>
