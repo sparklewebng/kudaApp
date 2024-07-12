@@ -1,3 +1,3 @@
-const BASE_URL = "https://kudaserver-v5l6.onrender.com";
+const BASE_URL = "https://kudaserverapi1-c95fnyepv-makin-monis-projects.vercel.app";
 
 export default BASE_URL;
