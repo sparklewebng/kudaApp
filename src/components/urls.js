@@ -1,3 +1,3 @@
-const BASE_URL = "https://apii-server.vercel.app";
+const BASE_URL = "https://kuda-server.vercel.app";
 
 export default BASE_URL;
